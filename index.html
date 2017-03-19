@@ -13,17 +13,26 @@
  <div class="container">
   <h1>Narrow Down Your Chinese Menu Choice</h1>
 
-  <div ng-controller="NarrowItDownController as list"> 
-    <div class='form-inline'>
+  <div ng-controller="NarrowItDownController as narrowItDownCtrl"> 
+    <div class='form-inline' style='margin:10px'>
       <div class="input-group">
-        <input type="text" placeholder="search term" class="form-control" ng-model='list.searchTerm'>
+        <input type="text" placeholder="search term" class="form-control" ng-model='narrowItDownCtrl.searchTerm'>
       </div>
-      <button class="btn btn-primary" ng-click='list.getMatchedMenuItems(list.searchTerm)'>Narrow It Down For Me!</button>
+      <div class="input-group">
+       <button class="btn btn-primary" ng-click='narrowItDownCtrl.getMatchedMenuItems(narrowItDownCtrl.searchTerm)'>Narrow It Down For Me!</button>
+     </div>
+     <div class="input-group">
+      <div ng-if='narrowItDownCtrl.inProgress' class="loader"></div>
     </div>
-
-    <found-items items="list.items" on-remove="list.removeItem(index)"></found-items>
-
   </div>
+
+  <found-items 
+  items="narrowItDownCtrl.foundItems" 
+  on-remove="narrowItDownCtrl.removeItem(index)" 
+  message="{{narrowItDownCtrl.message}}">
+</found-items>
+
+</div>
 
 </body>
 </html>

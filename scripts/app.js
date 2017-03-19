@@ -4,21 +4,27 @@
 
 	angular.module('NarrowItDownApp', [])
 	.controller('NarrowItDownController', NarrowItDownController)
-	.controller('ShoppingListDirectiveController', ShoppingListDirectiveController)
+	.controller('FoundItemsDirectiveController', FoundItemsDirectiveController)
 	.service('MenuSearchService', MenuSearchService)
 	.directive('foundItems', FoundItemsDirective);
+
 	function FoundItemsDirective() {
 		var ddo = {
 			templateUrl: 'templates/foundItems.html',
 			scope: {
 				items: '<',
-				onRemove: '&'
-			}
+				onRemove: '&',
+				inProgress: '<',
+				message: '@message'
+			},
+			controller: FoundItemsDirectiveController,
+			controllerAs: 'list',
+			bindToController: true
 		};
 		return ddo;
 	};
 
-	function ShoppingListDirectiveController (){
+	function FoundItemsDirectiveController (){
 		var list = this;
 	};
 
@@ -27,10 +33,15 @@
 	function NarrowItDownController (MenuSearchService){
 		var narrowItDownCtrl = this;
 
+		narrowItDownCtrl.message = "";
 		narrowItDownCtrl.searchTerm;
-		narrowItDownCtrl.items  = [];
+		narrowItDownCtrl.foundItems  = [];
+		narrowItDownCtrl.inProgress = false;
 
 		narrowItDownCtrl.getMatchedMenuItems = function(searchTerm){
+
+			narrowItDownCtrl.message = "";
+			narrowItDownCtrl.inProgress = true;
 			var promise = MenuSearchService.getMatchedMenuItems();
 
 			promise.then(function (result) {
@@ -42,21 +53,22 @@
 						foundItems.push(item);
 					}
 				}
-				narrowItDownCtrl.items = foundItems;
-
+				narrowItDownCtrl.foundItems = foundItems;
+				if(foundItems.length == 0){
+					narrowItDownCtrl.message = "Nothing is found!";
+				}
+				narrowItDownCtrl.inProgress = false;
+				
 			}).catch(function(error){
-				console.error("Something goes wrong!");
+				console.error(error);
+				narrowItDownCtrl.inProgress = false;
 			});
 
 		};
 
 		narrowItDownCtrl.removeItem = function (itemIndex) {
-			items.splice(itemIndex, 1);
+			narrowItDownCtrl.foundItems.splice(itemIndex, 1);
 		};
-
-		MenuSearchService.getMatchedMenuItems().then(function (result) {
-			narrowItDownCtrl.items = result.data.menu_items;
-		});
 
 	};
 
