@@ -1,0 +1,8 @@
+    <div class='jumbotron' ng-if='items.length > 0'>
+    	<ul>
+    		<li ng-repeat='item in items'>
+    			{{item.description}}
+    			<button ng-click="list.onRemove({index: $index});">Remove Item</button>
+    		</li>
+    	</ul>
+    </div>
