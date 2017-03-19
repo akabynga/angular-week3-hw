@@ -20,9 +20,8 @@
 		</li>
 	</ul>
 </div>
-<div class='jumbotron' ng-if='list.message!==undefined && list.message!=""'>
-	{{list.message}}
-</div>
+<div id="warning" class="alert alert-danger ng-binding" role="alert" style="display: block;" ng-if='list.message!==undefined && list.message!=""'>{{list.message}}</div>
+
 
 
 
